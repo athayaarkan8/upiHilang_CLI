@@ -1,6 +1,24 @@
 using namespace std;
 #include <iostream>
 
+struct Barang {
+    int id;
+    string nama;
+    string deskripsi;
+    string lokasi;
+    string kontak;
+};
+
+struct Node {
+    Barang data;
+    Node* prev;
+    Node* next;
+};
+
+Node* head = NULL;
+Node* tail = NULL;
+int counter = 1;
+
 void menu() {
     int pilihan;
 
@@ -21,4 +39,46 @@ void menu() {
 int main() {
     menu();
     return 0;
+}
+
+void hapusBarang() {
+    int id;
+    cout << "Masukkan ID yang ingin dihapus: ";
+    cin >> id;
+
+    Node* temp = head;
+
+    while (temp != NULL) {
+        if (temp->data.id == id) {
+            if (temp == head && temp == tail) {
+                head = tail = NULL;
+            }
+
+            else if (temp == head) {
+                head = head->next;
+                if (head != NULL) {
+                    head->prev = NULL;
+                }
+            }
+
+            else if (temp == tail) {
+                tail = tail->prev;
+                if (tail != NULL) {
+                    tail->next = NULL;
+                }
+            }
+
+            else {
+                temp->prev->next = temp->next;
+                temp->next->prev = temp->prev;
+            }
+
+            delete temp;
+            cout << "Data berhasil dihapus!\n";
+            return;
+        }
+        temp = temp->next;
+    }
+
+    cout << "Data tidak ditemukan.\n";
 }
