@@ -1,6 +1,8 @@
 using namespace std;
 #include <iostream>
 
+string kategoriList[3] = {"Elektronik", "Dokumen", "Aksesoris"};
+
 struct Barang
 {
     int id;
@@ -8,6 +10,7 @@ struct Barang
     string deskripsi;
     string lokasi;
     string kontak;
+    string kategori;
 };
 
 struct Node
@@ -60,6 +63,36 @@ void tambahBarang()
     cout << "Kontak: ";
     getline(cin, baru->data.kontak);
 
+    cout << "Kategori (0: Elektronik, 1: Dokumen, 2: Aksesoris): ";
+    int kategoriIndex;
+    cin >> kategoriIndex;
+
+    bool benar = false;
+    while (benar == false)
+    {
+        if (kategoriIndex >= 0 && kategoriIndex < 3)
+        {
+            benar = true;
+        }
+        else
+        {
+            cout << "Kategori tidak valid! Masukkan kembali: ";
+            cin >> kategoriIndex;
+            cin.ignore(); // Ignore the newline character left in the buffer
+        }
+    }
+
+    if (kategoriIndex >= 0 && kategoriIndex < 3)
+    {
+        baru->data.kategori = kategoriList[kategoriIndex];
+    }
+    else
+    {
+        cout << "Kategori tidak valid!\n";
+        delete baru;
+        return;
+    }
+
     baru->next = NULL;
     baru->prev = NULL;
 
@@ -74,7 +107,7 @@ void tambahBarang()
         tail = baru;
     }
 
-    cout << "Data berhasil ditambahkan!\n";
+    infoCard("Sukses", "Barang berhasil ditambahkan!");
 }
 
 void tampilkanBarang()
@@ -89,7 +122,7 @@ void tampilkanBarang()
 
     while (temp != NULL)
     {
-        cout << "ID: " << temp->data.id << " Nama: " << temp->data.nama << " Desc: " << temp->data.deskripsi.substr(0, 8) << endl;
+        cout << "ID: " << temp->data.id << " Nama: " << temp->data.nama << " Kategori: " << temp->data.kategori << " Desc: " << temp->data.deskripsi.substr(0, 8) + "..." << endl;
 
         temp = temp->next;
     }
@@ -124,6 +157,35 @@ void updateBarang(int id = 0)
 
             cout << "Kontak baru: ";
             getline(cin, temp->data.kontak);
+
+            cout << "Kategori baru (0: Elektronik, 1: Dokumen, 2: Aksesoris): ";
+            int kategoriIndex;
+            cin >> kategoriIndex;
+            cin.ignore();
+
+            bool benar = false;
+            while (benar == false)
+            {
+                if (kategoriIndex >= 0 && kategoriIndex < 3)
+                {
+                    benar = true;
+                }
+                else
+                {
+                    cout << "Kategori tidak valid! Masukkan kembali: ";
+                    cin >> kategoriIndex;
+                    cin.ignore(); // Ignore the newline character left in the buffer
+                }
+            }
+
+            if (kategoriIndex >= 0 && kategoriIndex < 3)
+            {
+                temp->data.kategori = kategoriList[kategoriIndex];
+            }
+            else
+            {
+                cout << "Kategori tidak valid!\n";
+            }
 
             infoCard("Sukses", "Data berhasil diupdate!");
             break;
@@ -222,44 +284,42 @@ void detailBarang(int id = 0)
     char pilihan;
 
     header("Detail Barang");
-    while (temp != NULL)
-    {
-        if (temp->data.id == id)
-        {
-            cout << "ID: " << temp->data.id << endl;
-            cout << "Nama: " << temp->data.nama << endl;
-            cout << "Deskripsi: " << temp->data.deskripsi << endl;
-            cout << "Lokasi: " << temp->data.lokasi << endl;
-            cout << "Kontak: " << temp->data.kontak << endl;
-            footer(13);
-            cout << "[A] Hapus Barang [B] Update Barang [X] Kembali\n";
-            cout << "Pilih aksi: ";
-            cin >> pilihan;
 
-            pilihan = tolower(pilihan);
-            if (pilihan == 'b')
-            {
-                updateBarang(id);
-            }
-            else if (pilihan == 'a')
-            {
-                hapusBarang(id);
-            }
-            else if (pilihan == 'x')
-            {
-                return;
-            }
-            else
-            {
-                infoCard("Error", "Pilihan [" + string(1, pilihan) + "] tidak valid. Silakan coba lagi.");
-            }
-        }
-        else
-        {
-            infoCard("Error", "Data tidak ditemukan.");
-        }
-        temp = temp->next;
+    bool ditemukan = false;
+
+while (temp != NULL)
+{
+    if (temp->data.id == id)
+    {
+        ditemukan = true;
+
+        cout << "ID: " << temp->data.id << endl;
+        cout << "Nama: " << temp->data.nama << endl;
+        cout << "Deskripsi: " << temp->data.deskripsi << endl;
+        cout << "Lokasi: " << temp->data.lokasi << endl;
+        cout << "Kontak: " << temp->data.kontak << endl;
+        footer(13);
+
+        cout << "[A] Hapus Barang [B] Update Barang [X] Kembali\n";
+        cout << "Pilih aksi: ";
+        cin >> pilihan;
+
+        pilihan = tolower(pilihan);
+
+        if (pilihan == 'b') updateBarang(id);
+        else if (pilihan == 'a') hapusBarang(id);
+        else if (pilihan == 'x') return;
+        else infoCard("Error", "Pilihan tidak valid.");
+
+        return; // penting!
     }
+    temp = temp->next;
+}
+
+if (!ditemukan)
+{
+    infoCard("Error", "Data tidak ditemukan.");
+}
 }
 
 void menu()
