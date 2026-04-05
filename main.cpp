@@ -1,7 +1,8 @@
 using namespace std;
 #include <iostream>
 
-struct Barang {
+struct Barang
+{
     int id;
     string nama;
     string deskripsi;
@@ -9,18 +10,20 @@ struct Barang {
     string kontak;
 };
 
-struct Node {
+struct Node
+{
     Barang data;
-    Node* prev;
-    Node* next;
+    Node *prev;
+    Node *next;
 };
 
-Node* head = NULL;
-Node* tail = NULL;
+Node *head = NULL;
+Node *tail = NULL;
 int counter = 1;
 
-void tambahBarang() {
-    Node* baru = new Node;
+void tambahBarang()
+{
+    Node *baru = new Node;
 
     baru->data.id = counter++;
 
@@ -40,9 +43,12 @@ void tambahBarang() {
     baru->next = NULL;
     baru->prev = NULL;
 
-    if (head == NULL) {
+    if (head == NULL)
+    {
         head = tail = baru;
-    } else {
+    }
+    else
+    {
         tail->next = baru;
         baru->prev = tail;
         tail = baru;
@@ -51,10 +57,12 @@ void tambahBarang() {
     cout << "Data berhasil ditambahkan!\n";
 }
 
-void menu() {
+void menu()
+{
     int pilihan;
 
-    do {
+    do
+    {
         cout << "\n=== UPIHilang ===\n";
         cout << "1. Tambah Barang\n";
         cout << "2. Tampilkan Barang\n";
@@ -65,42 +73,59 @@ void menu() {
         cout << "Pilih: ";
         cin >> pilihan;
 
+        switch (pilihan)
+        {
+        case 1:
+            tambahBarang();
+            break;
+        case 4:
+            hapusBarang();
+            break;
+        case 5:
+            cariBarang();
+            break;
+        }
+
     } while (pilihan != 0);
 }
 
-int main() {
-    menu();
-    return 0;
-}
-
-void hapusBarang() {
+void hapusBarang()
+{
     int id;
     cout << "Masukkan ID yang ingin dihapus: ";
     cin >> id;
 
-    Node* temp = head;
+    Node *temp = head;
 
-    while (temp != NULL) {
-        if (temp->data.id == id) {
-            if (temp == head && temp == tail) {
+    while (temp != NULL)
+    {
+        if (temp->data.id == id)
+        {
+            if (temp == head && temp == tail)
+            {
                 head = tail = NULL;
             }
 
-            else if (temp == head) {
+            else if (temp == head)
+            {
                 head = head->next;
-                if (head != NULL) {
+                if (head != NULL)
+                {
                     head->prev = NULL;
                 }
             }
 
-            else if (temp == tail) {
+            else if (temp == tail)
+            {
                 tail = tail->prev;
-                if (tail != NULL) {
+                if (tail != NULL)
+                {
                     tail->next = NULL;
                 }
             }
 
-            else {
+            else
+            {
                 temp->prev->next = temp->next;
                 temp->next->prev = temp->prev;
             }
@@ -113,4 +138,40 @@ void hapusBarang() {
     }
 
     cout << "Data tidak ditemukan.\n";
+}
+
+void cariBarang()
+{
+    string keyword;
+    cout << "Masukkan nama barang: ";
+    cin.ignore();
+    getline(cin, keyword);
+
+    Node *temp = head;
+    bool ditemukan = false;
+
+    while (temp != NULL)
+    {
+        if (temp->data.nama.find(keyword) != string::npos)
+        {
+            cout << "\nID: " << temp->data.id << endl;
+            cout << "Nama: " << temp->data.nama << endl;
+            cout << "Lokasi: " << temp->data.lokasi << endl;
+            cout << "Kontak: " << temp->data.kontak << endl;
+            cout << "------------------\n";
+            ditemukan = true;
+        }
+        temp = temp->next;
+    }
+
+    if (!ditemukan)
+    {
+        cout << "Barang tidak ditemukan.\n";
+    }
+}
+
+int main()
+{
+    menu();
+    return 0;
 }
