@@ -51,6 +51,51 @@ void tambahBarang() {
     cout << "Data berhasil ditambahkan!\n";
 }
 
+// ====== BAGIAN KAMU (ADEL) ======
+void updateBarang() {
+    if (head == NULL) {
+        cout << "Data kosong!\n";
+        return;
+    }
+
+    int idCari;
+    cout << "Masukkan ID barang yang ingin diupdate: ";
+    cin >> idCari;
+
+    Node* temp = head;
+    bool ketemu = false;
+
+    while (temp != NULL) {
+        if (temp->data.id == idCari) {
+            ketemu = true;
+
+            cout << "Data ditemukan!\n";
+
+            cin.ignore();
+            cout << "Nama baru: ";
+            getline(cin, temp->data.nama);
+
+            cout << "Deskripsi baru: ";
+            getline(cin, temp->data.deskripsi);
+
+            cout << "Lokasi baru: ";
+            getline(cin, temp->data.lokasi);
+
+            cout << "Kontak baru: ";
+            getline(cin, temp->data.kontak);
+
+            cout << "Data berhasil diupdate!\n";
+            break;
+        }
+        temp = temp->next;
+    }
+
+    if (!ketemu) {
+        cout << "ID tidak ditemukan!\n";
+    }
+}
+// ====== END BAGIAN KAMU ======
+
 void menu() {
     int pilihan;
 
@@ -64,6 +109,14 @@ void menu() {
         cout << "0. Keluar\n";
         cout << "Pilih: ";
         cin >> pilihan;
+
+        // TAMBAHAN KAMU (TIDAK MENGUBAH YANG LAIN)
+        if (pilihan == 1) {
+            tambahBarang();
+        }
+        else if (pilihan == 3) {
+            updateBarang();
+        }
 
     } while (pilihan != 0);
 }
